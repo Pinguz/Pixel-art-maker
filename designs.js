@@ -1,37 +1,43 @@
-// Select color input
-// Select size input
-let canvas = document.getElementById('pixelCanvas');
-let height = document.getElementById('inputHeight');
-let weight = document.getElementById('inputWidth');
-let sizePicker = document.getElementById('sizePicker');
-let color = document.getElementById('colorPicker');
+const pixelCanvas = document.getElementById("pixelCanvas");
+const inputHeight = document.getElementById("inputHeight");
+const inputWidth = document.getElementById("inputWidth");
+const sizePicker = document.getElementById("sizePicker");
+const colorPicker = document.getElementById("colorPicker");
+const fragment = document.createDocumentFragment();
+let color, gridHeight, gridWidth;
 
-color.addEventListener('click',function(){});
-
-sizePicker.onsubimt = function(event){
-  event.preventDefault();
-  clearGrid();
+//提交按钮
+sizePicker.addEventListener("submit", e => {
+  e.preventDefault();
+  gridHeight = inputHeight.value;
+  gridWidth = inputWidth.value;
   makeGrid();
-};
+});
 
 // When size is submitted by the user, call makeGrid()
-
 function makeGrid() {
-  for (let r=0; r<height.value; r++){
-    const row = canvas.insertRow(r);
-    for(let c=0; c<weight.value; c++){
-      const cell = row.insertCell(c);
-      cell.addEventListener('click',fillSquare);
+  pixelCanvas.innerHTML = "";
+  for (let i = 0;  i < gridHeight；i++) {
+    const tr = document.createElement("tr");
+    for(let j = 0; j < gridWidth; j++){
+      const td = document.createElement("td");
+      tr.appendChild(td);
     }
+    fragment.appendChild(tr);
   }
+  pixelCanvas.appendChild(fragment);
 }
+//事件委托 提升性能
+pixelCanvas.addEventListener("click", e => {
+  const event = e || window.event;
+  const target = event.target || event.srcElement;
 
-function clearGrid(){
-  while (canvas.firstChild){
-    canvas.removeChild(canvan.firstChild);
+  if (target.nodeName.toLocaleLowerCase() === "td") {
+    color = colorPicker.value;
+    target.style.backgroundColor = color;
   }
-}
-
-function fillSquare(){
-  this.setAttribute('style','background-color: ${color.value}');
-}
+});
+//不需要了，浏览器可以自动完成
+//function fillSquare(){
+//  this.setAttribute('style','background-color: ${color.value}');
+//}
